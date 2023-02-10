@@ -18,6 +18,9 @@ or this project
 
 The file upload vulnerability in the ecshop management background allows the webshell to be uploaded to elevate permissions.
 
+**Filtering is not strict in file upload, which leads to bypassing the restriction of. php**
+
+![image-20230210211607769](https://github.com/jingping911/exshopbug/blob/main/7.png)
 
 
 ### 4.**Vulnerability details**
