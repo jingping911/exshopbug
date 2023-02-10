@@ -1,0 +1,186 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script language='javascript' src='{$template_dir}/js/cloudzoom.js' type='text/javascript' charset='utf-8'></script>
+<link rel="stylesheet" type="text/css" href="{$template_dir}/images/cloudzoom.css" />
+<script type="text/javascript">
+            CloudZoom.quickStart();
+        </script>
+<div class="imgbox"><!-- {if $pictures}-->
+<div class="probox">
+<img src="{$goods.goods_img}" alt="{$goods.goods_name|escape:html}" class="gmax_pic"/>
+{$goods.goods_w}
+<div class="hoverbox"></div>
+            </div>
+<!-- {else} -->
+<div class="probox">
+<img src="{$goods.goods_img}" alt="{$goods.goods_name|escape:html}" class="gmax_pic"/>
+<div class="hoverbox"></div>
+            </div>
+<!-- {/if}-->
+<div class="showbox">
+                <img src="{$goods.goods_img}" alt="{$goods.goods_name|escape:html}"  class="gmax_pic"/>
+            </div>
+</div>
+<!-- {if $pictures}-->
+<div class="picture" id="imglist"><div class="up_down up"><</div>
+  <DIV class="cxjad_m">
+    <DIV class="cxjinfo">
+      <!-- {foreach from=$pictures item=picture name=no}-->
+      <!-- {if $smarty.foreach.no.iteration < 2}  -->
+      <DIV class="gg cxjitem"><a  class="a_h" href="{$picture.img_url}"
+        rev="{$picture.img_url}"
+        title="{$picture.img_desc|escape:html}" target="_blank"> <img src="{if $picture.thumb_url}{$picture.thumb_url}{else}{$picture.img_url}{/if}" alt="{$goods.goods_name}" /></a></DIV>
+      <!-- {else}-->
+      <DIV class="gg cxjitem"> <a  href="{$picture.img_url}"
+        rev="{$picture.img_url}"
+        title="{$picture.img_desc|escape:html}" target="_blank"> <img src="{if $picture.thumb_url}{$picture.thumb_url}{else}{$picture.img_url}{/if}" alt="{$goods.goods_name}" /></a></DIV>
+      <!-- {/if}-->
+      <!--{/foreach}-->
+    </DIV>
+  </DIV><div class="up_down down">></div>
+</div>
+<script>
+    $(function() {$(".gmax_pic").attr('src',$(".picture .cxjitem a").first().attr("rev"));
+        $(".picture").textSlider({
+            speeds: 5000,
+            lines: 1,
+            offset: 5000000,
+            direc: 1,
+            qnum: 5
+        });
+		$(".cxjitem a").hover(function(){
+	    $(".cxjitem a").removeClass("a_h");
+		$(this).addClass('a_h');
+		var imgSrc=$(this).attr("rev");
+		$(".gmax_pic").attr('src',imgSrc);
+}
+ );
+    });
+function Zoom(imgbox, hoverbox, l, t, x, y, h_w, h_h, showbox) {
+    var moveX = x - l - (h_w / 2);
+    //鼠标区域距离
+    var moveY = y - t - (h_h / 2);
+    //鼠标区域距离
+    if (moveX < 0) {
+        moveX = 0
+    }
+    if (moveY < 0) {
+        moveY = 0
+    }
+    if (moveX > imgbox.width() - h_w) {
+        moveX = imgbox.width() - h_w
+    }
+    if (moveY > imgbox.height() - h_h) {
+        moveY = imgbox.height() - h_h
+    }
+    //判断鼠标使其不跑出图片框
+    var zoomX = showbox.width() / imgbox.width()
+    //求图片比例
+    var zoomY = showbox.height() / imgbox.height()
+
+    showbox.css({
+        left: -(moveX * zoomX),
+        top: -(moveY * zoomY)
+    })
+    hoverbox.css({
+        left: moveX,
+        top: moveY
+    })
+    //确定位置
+
+}
+
+function Zoomhover(imgbox, hoverbox, showbox) {
+    var l = imgbox.offset().left;
+    var t = imgbox.offset().top;
+    var w = hoverbox.width();
+    var h = hoverbox.height();
+    var time;
+    $(".probox img,.hoverbox").mouseover(function(e) {
+        var x = e.pageX;
+        var y = e.pageY;
+        $(".hoverbox,.showbox").show();
+        hoverbox.css("opacity", "0.3")
+        time = setTimeout(function() {
+            Zoom(imgbox, hoverbox, l, t, x, y, w, h, showbox)
+        }, 1)
+    }).mousemove(function(e) {
+        var x = e.pageX;
+        var y = e.pageY;
+        time = setTimeout(function() {
+            Zoom(imgbox, hoverbox, l, t, x, y, w, h, showbox)
+        }, 1)
+    }).mouseout(function() {
+        showbox.parent().hide()
+        hoverbox.hide();
+    })
+}
+$(function() {
+    Zoomhover($(".probox img"), $(".hoverbox"), $(".showbox img"));
+})
+
+
+    </script>
+<!-- {/if}-->
+<style>
+#goodsInfo .imgInfo{ width:40%}
+#goodsInfo .textInfo{ width:55%}
+.gmax_pic_box{ background:#FFF; margin-bottom:15px;}
+.gmax_pic{  width:400px; height:auto}
+.cxjitem img{ border:2px solid #eee; width:70px; height:70px;}
+.cxjitem .a_h img{ border:2px solid #6BA103;}
+.picture{ position:relative;z-index:1; width:460px;}
+.picture .cxjad_m{ position:relative; z-index:2; width:400px; overflow:hidden; float:left}
+.picture .cxjad_m .cxjinfo{ position:relative; margin:auto}
+.picture .cxjitem{ float:left; width:80px;float:left; text-align:center}
+
+.picture a{ display:block; width:100%; height:100%; }
+.picture .TABLE_2{ display:none}
+
+.picture  div.up_down{ width:20px; height:70px; text-align:center; line-height:70px; cursor:pointer; color:#333; font-family:"SimSun-ExtB"; font-size:26px; font-weight:normal; background:#f5f5f5;}
+.picture  div.up_down:hover{background:#ddd}
+
+.picture  div.down{ float:right; margin-left:10px;}
+.picture  div.up{ float:left; margin-right:10px; }
+.imgbox {
+	position:relative;
+}
+.probox {
+	margin-top:30px;
+	margin-left:30px;
+	margin-bottom:40px;
+	width:400px;
+	height:400px;
+}
+.probox img {
+	width:400px;
+	height:400px;
+	vertical-align:top;
+}
+.showbox {
+	display:none;
+	position:absolute;
+	left:480px;
+	top:100px;
+	width:460px;
+	height:300px;
+	overflow:hidden;
+}
+.showbox img {
+	position:absolute;
+	height:300%;
+	width:300%;
+}
+.hoverbox {
+	display:none;
+	position:absolute;
+	top:0;
+	background:#09f;
+	height:75px;
+	width:100px;
+	cursor:move;
+	z-index:10;
+}
+
+</style>
+<div class="clear10"></div>

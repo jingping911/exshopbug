@@ -1,0 +1,14 @@
+{
+  "latest": {
+    "info": {
+      "id": "107",
+      "name": "ecshop",
+      "number": "1.0.7",
+      "info": "1.此版本用于测试自动更新\n2.请求数据来自ec\n3.请更换成自己的api地址",
+      "androidLink": "https://api.ecshop.yunyingbao.net/pure-updater/release/ecshop107.wgt",
+      "iosLink": "https://api.ecshop.yunyingbao.net/pure-updater/release/ecshop107.wgt",
+      "packgeSize": "209270",
+      "type": "alpha"
+    }
+  }
+}

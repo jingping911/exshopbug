@@ -1,0 +1,125 @@
+<!-- $Id: sale_general.htm 16869 2009-12-10 10:31:14Z liuhui $ -->
+<script src="DWConfiguration/ActiveContent/IncludeFiles/AC_RunActiveContent.js" type="text/javascript"></script>
+<script src="js/echarts.min.js"></script>
+
+{include file="pageheader.htm"}
+<div class="form-div">
+  <form action="sale_general.php?act=list" method="post">
+  <strong>{$lang.year_status}</strong>
+  {html_select_date prefix="year_begin" time=$start_time start_year="2006" end_year="+1" display_days=false display_months=false}
+  -
+  {html_select_date prefix="year_end" time=$end_time start_year="2006" end_year="+1" display_days=false display_months=false}
+  <input type="submit" name="query_by_year" value="{$lang.query}" class="button" />
+  <br />
+  <strong>{$lang.month_status}</strong>
+  {html_select_date prefix="month_begin" time=$start_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
+  -
+  {html_select_date prefix="month_end" time=$end_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
+  <input type="submit" name="query_by_month" value="{$lang.query}" class="button" />
+  </form>
+</div>
+
+<div class="tab-div">
+   <div id="tabbar-div">
+      <p>
+        <span class="tab-front" id="order-tab">{$lang.order_status}</span><span
+        class="tab-back" id="turnover-tab">{$lang.turnover_status}</span>
+      </p>
+   </div>
+   <div id="tabbody-div">
+      <!-- 订单数量 -->
+      <table width="90%" id="order-table">
+        <tr><td align="center">
+            <div id="main" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main'));
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '订单走势'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['订单']
+                    },
+                    xAxis: {
+                        data: []
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '订单',
+                        type: 'bar',
+                        data: []
+                    }]
+                };
+                var data_list = {$data_list};
+                for (var i = 0;i< data_list.length;i++) {
+                    option.xAxis.data.push(data_list[i]['period'])
+                    option.series[0].data.push(data_list[i]['order_count'])
+                }
+
+                        // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            </script>
+
+            <div>{$data_count_name}</div>
+        </td></tr>
+      </table>
+
+      <!-- 营业额 -->
+      <table width="90%" id="turnover-table" style="display:none">
+        <tr><td align="center">
+            <div id="main_xs" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChartSet = echarts.init(document.getElementById('main_xs'));
+
+                // 指定图表的配置项和数据
+                var options = {
+                    title: {
+                        text: '销售额走势'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['销售额']
+                    },
+                    xAxis: {
+                        data: []
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '销售额',
+                        type: 'bar',
+                        data: []
+                    }]
+                };
+                var list = {$data_list};
+                for (var i = 0;i< list.length;i++) {
+                    options.xAxis.data.push(list[i]['period'])
+                    options.series[0].data.push(list[i]['order_amount'])
+                }
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChartSet.setOption(options);
+            </script>
+
+          <div>{$data_amount_name}</div>
+        </td></tr>
+      </table>
+    </div>
+</div>
+{insert_scripts files="tab.js"}
+<script language="JavaScript">
+<!--
+{literal}
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+{/literal}
+-->
+</script>
+{include file="pagefooter.htm"}

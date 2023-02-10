@@ -1,0 +1,225 @@
+<!-- $Id: order_stats.htm 16420 2009-07-02 06:56:57Z liubo $ -->
+{include file="pageheader.htm"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<script type="text/javascript" src="js/echarts.min.js"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+  <p style="margin: 10px">
+    <strong>{$lang.overall_sum}</strong>:&nbsp;&nbsp;{$total_turnover}&nbsp;&nbsp;&nbsp;
+    <strong>{$lang.overall_choose}</strong>:&nbsp;&nbsp;{$click_count}&nbsp;&nbsp;&nbsp;
+    <strong>{$lang.kilo_buy_amount}</strong>:&nbsp;&nbsp;{$click_ordernum}&nbsp;&nbsp;&nbsp;
+    <strong>{$lang.kilo_buy_sum}</strong>:&nbsp;&nbsp;{$click_turnover}
+  </p>
+</div>
+
+<div class="form-div">
+  <form action="" method="post" id="selectForm" name="selectForm">
+    {$lang.start_date}:
+    <input type="text" name="start_date" value="{$start_date}" size="12" onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);">&nbsp;&nbsp;
+    {$lang.end_date}:
+    <input type="text" name="end_date" value="{$end_date}" size="12" onclick="return showCalendar(this, '%Y-%m-%d', false, false, this);">
+    <input type="submit" name="submit" value="{$lang.query}" class="button" />
+  </form>
+</div>
+<div class="tab-div">
+ <div id="tabbar-div">
+    <p>
+      <span class="tab-front" id="order_circs-tab">{$lang.order_circs}</span><span
+      class="tab-back" id="shipping-tab">{$lang.shipping_method}</span><span
+      class="tab-back" id="pay-tab">{$lang.pay_method}</span>
+    </p>
+ </div>
+ <div id="tabbody-div">
+    <table width="90%" cellspacing="0" cellpadding="3" id="order_circs-table">
+      <tr>
+        <td align="center">
+        {if $is_multi eq '0'}
+            <div id="main" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                var myChart = echarts.init(document.getElementById('main'));
+                var option = {
+                    title: {
+                        text: '订单概况',
+                        subtext: '订单概况',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                    },
+                    series: [
+                        {
+                            name: '订单概况',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+                                {value: 1048, name: '已成交'},
+                                {value: 735, name: '已确认'},
+                                {value: 580, name: '无效或取消'},
+                                {value: 484, name: '未确认'},
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                var data_list = {$result};
+                option.series[0].data[0].value = data_list['succeed_num']
+                option.series[0].data[1].value = data_list['confirmed_num']
+                option.series[0].data[2].value = data_list['invalid_num']
+                option.series[0].data[3].value = data_list['unconfirmed_num']
+                myChart.setOption(option);
+            </script>
+        {else}
+            <script>
+                console.log(222)
+            </script>
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+              codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+              width="565" height="420" id="FCColumn2" align="middle">
+              <PARAM NAME="FlashVars" value="&dataXML={$order_general_xml}">
+              <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+              <param NAME="quality" VALUE="high">
+              <param NAME="bgcolor" VALUE="#FFFFFF">
+              <param name="wmode" value="opaque" />
+              <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$order_general_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+            </object>
+    {/if}
+        </td>
+      </tr>
+    </table>
+    <table width="90%" cellspacing="0" cellpadding="3" id="shipping-table" style="display:none">
+      <tr>
+        <td align="center">
+        {if $is_multi eq '0'}
+            <div id="main_p" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                var myChart = echarts.init(document.getElementById('main_p'));
+                var option = {
+                    title: {
+                        text: '配送方式',
+                        subtext: '配送方式',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                    },
+                    series: [
+                        {
+                            name: '配送方式',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                var data_list = {$res_data};
+                for (let i = 0;i< data_list.length;i++) {
+                    option.series[0].data.push(data_list[i])
+                }
+                myChart.setOption(option);
+            </script>
+        {else}
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+              codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+              width="565" height="420" id="FCColumn2" align="middle">
+              <PARAM NAME="FlashVars" value="&dataXML={$ship_xml}">
+              <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+              <param NAME="quality" VALUE="high">
+              <param NAME="bgcolor" VALUE="#FFFFFF">
+              <param name="wmode" value="opaque" />
+              <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$ship_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+            </object>
+        {/if}
+        </td>
+      </tr>
+    </table>
+    <table width="90%" cellspacing="0" cellpadding="3" id="pay-table" style="display:none">
+      <tr>
+        <td align="center">
+        {if $is_multi eq '0'}
+            <div id="main_a" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                var myChart = echarts.init(document.getElementById('main_a'));
+                var option = {
+                    title: {
+                        text: '支付方式',
+                        subtext: '支付方式',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                    },
+                    series: [
+                        {
+                            name: '支付方式',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                var data_list = {$res};
+                for (let i = 0;i< data_list.length;i++) {
+                    option.series[0].data.push(data_list[i])
+                }
+                myChart.setOption(option);
+            </script>
+    {else}
+    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+              width="565" height="420" id="FCColumn2" align="middle">
+              <PARAM NAME="FlashVars" value="&dataXML={$pay_xml}">
+              <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+              <param NAME="quality" VALUE="high">
+              <param NAME="bgcolor" VALUE="#FFFFFF">
+              <param name="wmode" value="opaque" />
+              <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$pay_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></object>
+    {/if}
+        </td>
+      </tr>
+    </table>
+ </div>
+</div>
+{insert_scripts files="tab.js"}
+<script language="JavaScript">
+onload = function()
+{
+    // 开始检查订单
+  startCheckOrder();
+}
+</script>
+{include file="pagefooter.htm"}
